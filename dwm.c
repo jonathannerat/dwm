@@ -32,6 +32,7 @@
 #include <sys/wait.h>
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
+#include <X11/XF86keysym.h>
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/Xproto.h>
@@ -45,6 +46,10 @@
 
 #include "drw.h"
 #include "util.h"
+ 
+/* X Modifiers */
+#define XK_ANY_MOD ~0
+#define XK_NO_MOD   0
 
 /* macros */
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
@@ -772,7 +777,7 @@ createmon(void)
 void
 deck(Monitor *m)
 {
-	unsigned int i, n, h, mw, my, ns, r, ie = enablegaps, oe=enablegaps;
+	unsigned int i, n, h, mw, my, r, ie = enablegaps, oe=enablegaps;
 	Client *c;
 
 	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
@@ -785,11 +790,9 @@ deck(Monitor *m)
 
 	if(n > m->nmaster) {
 		mw = m->nmaster ? (m->ww + m->gappiv*ie) * m->mfact : 0;
-		ns = m->nmaster > 0 ? 2 : 1;
 		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n - m->nmaster);
 	} else {
 		mw = m->ww;
-		ns = 1;
 	}
 	for(i = 0, my = gappoh*oe, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if(i < m->nmaster) {

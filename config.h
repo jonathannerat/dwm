@@ -79,6 +79,28 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
+enum {
+	CmdDmenu, CmdSt, CmdPAMute, CmdPAVolUp, CmdPAVolUpU, CmdPAVolDown, CmdPAVolDownU,
+	CmdMpcToggle, CmdMpcPrev, CmdMpcNext, CmdMpcSeekBack, CmdMpcSeekForw, CmdMpcSeekBackL,
+	CmdMpcSeekForwL, CmdLast };
+
+static const char *cmds[][CmdLast] = {
+	[CmdDmenu]        = { "dmenu_run", NULL },
+	[CmdSt]           = { "st", NULL },
+	[CmdPAMute]       = { "pamixer" , "-t", NULL },
+	[CmdPAVolUp]      = { "pamixer" , "--max-volume=50", "-i5", NULL },
+	[CmdPAVolUpU]     = { "pamixer" , "-i5", NULL },
+	[CmdPAVolDown]    = { "pamixer" , "--max-volume=50", "-d5", NULL },
+	[CmdPAVolDownU]   = { "pamixer" , "-d5", NULL },
+	[CmdMpcToggle]    = { "mpc" , "toggle", NULL},
+	[CmdMpcPrev]      = { "mpc" , "next", NULL},
+	[CmdMpcNext]      = { "mpc" , "prev", NULL},
+	[CmdMpcSeekBack]  = { "mpc" , "seek", "-10",  NULL},
+	[CmdMpcSeekForw]  = { "mpc" , "seek", "+10", NULL},
+	[CmdMpcSeekBackL] = { "mpc" , "seek", "-1:00",  NULL},
+	[CmdMpcSeekForwL] = { "mpc" , "seek", "+1:00", NULL},
+};
+
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
@@ -119,6 +141,19 @@ static Key keys[] = {
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} },
+	{ XK_NO_MOD,        XF86XK_AudioMute,      spawn,          {.v = cmds[CmdPAMute]} },
+	{ XK_NO_MOD, XF86XK_AudioLowerVolume,      spawn,          {.v = cmds[CmdPAVolDown]} },
+	{ ShiftMask, XF86XK_AudioLowerVolume,      spawn,          {.v = cmds[CmdPAVolDownU]} },
+	{ XK_NO_MOD, XF86XK_AudioRaiseVolume,      spawn,          {.v = cmds[CmdPAVolUp]} },
+	{ ShiftMask, XF86XK_AudioRaiseVolume,      spawn,          {.v = cmds[CmdPAVolUpU]} },
+	{ XK_NO_MOD,        XF86XK_AudioPlay,      spawn,          {.v = cmds[CmdMpcToggle]} },
+	{ XK_NO_MOD,       XF86XK_AudioPause,      spawn,          {.v = cmds[CmdMpcToggle]} },
+	{ XK_NO_MOD,        XF86XK_AudioPrev,      spawn,          {.v = cmds[CmdMpcPrev]} },
+	{ XK_NO_MOD,        XF86XK_AudioNext,      spawn,          {.v = cmds[CmdMpcNext]} },
+	{ ControlMask,      XF86XK_AudioPrev,      spawn,          {.v = cmds[CmdMpcSeekBack]} },
+	{ ControlMask,      XF86XK_AudioNext,      spawn,          {.v = cmds[CmdMpcSeekForw]} },
+	{ ShiftMask,        XF86XK_AudioPrev,      spawn,          {.v = cmds[CmdMpcSeekBackL]} },
+	{ ShiftMask,        XF86XK_AudioNext,      spawn,          {.v = cmds[CmdMpcSeekForwL]} }
 };
 
 /* button definitions */
