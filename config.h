@@ -3,6 +3,7 @@
 /* appearance */
 static const unsigned int borderpx  = 2;  /* border pixel of windows */
 static const unsigned int snap      = 32; /* snap pixel */
+static const int showsystray        = 1;     /* 0 means no systray */
 static const int swallowfloating    = 1;   /* 1 means swallow floating windows by default */
 static const unsigned int gappih    = 2;  /* horiz inner gap between windows */
 static const unsigned int gappiv    = 2;  /* vert inner gap between windows */
@@ -15,6 +16,9 @@ static const int startontag         = 0;  /* 0 means no tag active on start */
 static const int vertpad            = 4;  /* vertical padding of bar */
 static const int sidepad            = 4;  /* horizontal padding of bar */
 static const int barheight          = 0;  /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
+static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
+static const unsigned int systrayspacing = 2;   /* systray spacing */
+static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
 static const char *fonts[]          = { "monospace:size=10" };
 static const char dmenufont[]       = "monospace:size=10";
 static const char col_gray1[]       = "#222222";
