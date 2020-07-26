@@ -681,28 +681,36 @@ createmon(void)
 }
 
 void
-deck(Monitor *m) {
-	unsigned int i, n, h, mw, my;
+deck(Monitor *m)
+{
+	unsigned int i, n, h, mw, my, ns, r, ie = enablegaps, oe=enablegaps;
 	Client *c;
 
 	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
 	if(n == 0)
 		return;
 
-	if(n > m->nmaster) {
-		mw = m->nmaster ? m->ww * m->mfact : 0;
-		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n - m->nmaster);
+	if (smartgaps == n) {
+		oe = 0; // outer gaps disabled
 	}
-	else
+
+	if(n > m->nmaster) {
+		mw = m->nmaster ? (m->ww + m->gappiv*ie) * m->mfact : 0;
+		ns = m->nmaster > 0 ? 2 : 1;
+		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n - m->nmaster);
+	} else {
 		mw = m->ww;
-	for(i = my = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+		ns = 1;
+	}
+	for(i = 0, my = gappoh*oe, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if(i < m->nmaster) {
-			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
-			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), False);
-			my += HEIGHT(c);
-		}
-		else
-			resize(c, m->wx + mw, m->wy, m->ww - mw - (2*c->bw), m->wh - (2*c->bw), False);
+			r = MIN(n, m->nmaster) - i;
+			h = (m->wh - my - m->gappoh*oe - m->gappih*ie * (r - 1)) / r;
+			resize(c, m->wx + m->gappov*oe, m->wy + my, mw - (2*c->bw) - m->gappiv*ie, h - (2*c->bw), 0);
+			if (my + HEIGHT(c) + m->gappih*ie < m->wh)
+				my += HEIGHT(c) + m->gappih*ie;
+		} else
+			resize(c, m->wx + mw + m->gappoh*oe, m->wy + gappoh*oe, m->ww - mw - (2*c->bw) - 2*gappov*oe, m->wh - 2*gappoh*oe - (2*c->bw), False);
 }
 
 void
@@ -1887,7 +1895,7 @@ tile(Monitor *m)
 			h = (m->wh - my - m->gappoh*oe - m->gappih*ie * (r - 1)) / r;
 			resize(c, m->wx + m->gappov*oe, m->wy + my, mw - (2*c->bw) - m->gappiv*ie, h - (2*c->bw), 0);
 			if (my + HEIGHT(c) + m->gappih*ie < m->wh)
-			my += HEIGHT(c) + m->gappih*ie;
+				my += HEIGHT(c) + m->gappih*ie;
 		} else {
 			r = n - i;
 			h = (m->wh - ty - m->gappoh*oe - m->gappih*ie * (r - 1)) / r;
