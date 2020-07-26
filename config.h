@@ -1,14 +1,19 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
-static const unsigned int snap      = 32;       /* snap pixel */
-static const int showbar            = 1;        /* 0 means no bar */
-static const int topbar             = 1;        /* 0 means bottom bar */
-static const int startontag         = 0;        /* 0 means no tag active on start */
-static const int vertpad            = 10;       /* vertical padding of bar */
-static const int sidepad            = 10;       /* horizontal padding of bar */
-static const int barheight          = 0;        /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
+static const unsigned int borderpx  = 2;  /* border pixel of windows */
+static const unsigned int snap      = 32; /* snap pixel */
+static const unsigned int gappih    = 2;  /* horiz inner gap between windows */
+static const unsigned int gappiv    = 2;  /* vert inner gap between windows */
+static const unsigned int gappoh    = 4;  /* horiz outer gap between windows and screen edge */
+static const unsigned int gappov    = 4;  /* vert outer gap between windows and screen edge */
+static const int smartgaps          = 0;  /* 1 means no outer gap when there is only one window */
+static const int showbar            = 1;  /* 0 means no bar */
+static const int topbar             = 1;  /* 0 means bottom bar */
+static const int startontag         = 0;  /* 0 means no tag active on start */
+static const int vertpad            = 4;  /* vertical padding of bar */
+static const int sidepad            = 4;  /* horizontal padding of bar */
+static const int barheight          = 0;  /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
 static const char *fonts[]          = { "monospace:size=10" };
 static const char dmenufont[]       = "monospace:size=10";
 static const char col_gray1[]       = "#222222";
@@ -55,6 +60,7 @@ static const Layout layouts[] = {
 
 /* key definitions */
 #define MODKEY Mod4Mask
+#define ALTKEY Mod1Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -80,6 +86,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
+	{ MODKEY|ALTKEY,                XK_m,      togglegaps,     {0} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
