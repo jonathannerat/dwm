@@ -19,6 +19,11 @@ options:
 
 ${OBJ}: config.h config.mk
 
+dwm.o: theme.h
+
+theme.h:
+	cp theme.def.h $@
+
 config.h:
 	cp config.def.h $@
 
