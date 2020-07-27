@@ -266,6 +266,7 @@ static void sigchld(int unused);
 static void sighup(int unused);
 static void sigterm(int unused);
 static void spawn(const Arg *arg);
+static void spawnoverbar(const Arg *arg);
 static Monitor *systraytomon(Monitor *m);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
@@ -2127,8 +2128,6 @@ sigterm(int unused)
 void
 spawn(const Arg *arg)
 {
-	if (arg->v == dmenucmd)
-		dmenumon[0] = '0' + selmon->num;
 	if (fork() == 0) {
 		if (dpy)
 			close(ConnectionNumber(dpy));
@@ -2138,6 +2137,24 @@ spawn(const Arg *arg)
 		perror(" failed");
 		exit(EXIT_SUCCESS);
 	}
+}
+
+void
+spawnoverbar(const Arg *arg)
+{
+	char x[5], y[5], w[5], h[5];
+	sprintf(x, "%d", selmon->mx + sp);
+
+	if (topbar)
+		sprintf(y, "%d", selmon->my + vp);
+	else
+		sprintf(y, "%d", selmon->mh - bh + vp);
+
+	sprintf(w, "%d", selmon->mw - 2*sp);
+	sprintf(h, "%d", bh);
+	const char *dmenucmd[] = { ((char **)arg->v)[0], "-x", x, "-y", y, "-w", w, "-h", h, NULL };
+	const Arg a = {.v = dmenucmd};
+	spawn(&a);
 }
 
 void
