@@ -5,16 +5,16 @@ static const unsigned int borderpx  = 2;  /* border pixel of windows */
 static const unsigned int snap      = 32; /* snap pixel */
 static const int showsystray        = 1;     /* 0 means no systray */
 static const int swallowfloating    = 1;   /* 1 means swallow floating windows by default */
-static const unsigned int gappih    = 2;  /* horiz inner gap between windows */
-static const unsigned int gappiv    = 2;  /* vert inner gap between windows */
-static const unsigned int gappoh    = 4;  /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov    = 4;  /* vert outer gap between windows and screen edge */
+static const unsigned int gappih    = 5;  /* horiz inner gap between windows */
+static const unsigned int gappiv    = 5;  /* vert inner gap between windows */
+static const unsigned int gappoh    = 5;  /* horiz outer gap between windows and screen edge */
+static const unsigned int gappov    = 5;  /* vert outer gap between windows and screen edge */
 static const int smartgaps          = 0;  /* 1 means no outer gap when there is only one window */
 static const int showbar            = 1;  /* 0 means no bar */
 static const int topbar             = 1;  /* 0 means bottom bar */
 static const int startontag         = 0;  /* 0 means no tag active on start */
-static const int vertpad            = 4;  /* vertical padding of bar */
-static const int sidepad            = 4;  /* horizontal padding of bar */
+static const int vertpad            = 5;  /* vertical padding of bar */
+static const int sidepad            = 5;  /* horizontal padding of bar */
 static const int barheight          = 0;  /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
@@ -167,7 +167,7 @@ static Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkStatusText,        0,              Button2,        spawn,          {.v = cmds[CmdSt] } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
