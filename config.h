@@ -40,7 +40,7 @@ static const char *colors[][3] = {
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-static const char *tagsalt[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tagsalt[] = { "  ", "  ", "  ", "  ", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -124,10 +124,10 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 	{ MODKEY,                       XK_n,      togglealttag,   {0} },
-	{ MODKEY|ALTKEY,           XK_0,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY|ALTKEY,           XK_1,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY|ALTKEY,           XK_2,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY|ALTKEY,           XK_3,      setlayout,      {.v = &layouts[3]} },
+	{ MODKEY|ALTKEY,                XK_1,      setlayout,      {.v = &layouts[0]} },
+	{ MODKEY|ALTKEY,                XK_2,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY|ALTKEY,                XK_3,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY|ALTKEY,                XK_4,      setlayout,      {.v = &layouts[3]} },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -141,19 +141,19 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} },
 	{ MODKEY,                       XK_p,      spawnoverbar,   {.v = cmds[CmdDmenu] } },
-	{ XK_NO_MOD,        XF86XK_AudioMute,      spawn,          {.v = cmds[CmdPAMute]} },
-	{ XK_NO_MOD,        XF86XK_AudioLowerVolume,      spawn,   {.v = cmds[CmdPAVolDown]} },
-	{ ShiftMask,        XF86XK_AudioLowerVolume,      spawn,   {.v = cmds[CmdPAVolDownU]} },
-	{ XK_NO_MOD,        XF86XK_AudioRaiseVolume,      spawn,   {.v = cmds[CmdPAVolUp]} },
-	{ ShiftMask,        XF86XK_AudioRaiseVolume,      spawn,   {.v = cmds[CmdPAVolUpU]} },
-	{ XK_NO_MOD,        XF86XK_AudioPlay,             spawn,   {.v = cmds[CmdMpcToggle]} },
-	{ XK_NO_MOD,        XF86XK_AudioPause,            spawn,   {.v = cmds[CmdMpcToggle]} },
-	{ XK_NO_MOD,        XF86XK_AudioPrev,             spawn,   {.v = cmds[CmdMpcPrev]} },
-	{ XK_NO_MOD,        XF86XK_AudioNext,             spawn,   {.v = cmds[CmdMpcNext]} },
-	{ ControlMask,      XF86XK_AudioPrev,             spawn,   {.v = cmds[CmdMpcSeekBack]} },
-	{ ControlMask,      XF86XK_AudioNext,             spawn,   {.v = cmds[CmdMpcSeekForw]} },
-	{ ShiftMask,        XF86XK_AudioPrev,             spawn,   {.v = cmds[CmdMpcSeekBackL]} },
-	{ ShiftMask,        XF86XK_AudioNext,             spawn,   {.v = cmds[CmdMpcSeekForwL]} }
+	{ XK_NO_MOD,    XF86XK_AudioMute,          spawn,          {.v = cmds[CmdPAMute]} },
+	{ XK_NO_MOD,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDown]} },
+	{ ShiftMask,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDownU]} },
+	{ XK_NO_MOD,    XF86XK_AudioRaiseVolume,   spawn,          {.v = cmds[CmdPAVolUp]} },
+	{ ShiftMask,    XF86XK_AudioRaiseVolume,   spawn,          {.v = cmds[CmdPAVolUpU]} },
+	{ XK_NO_MOD,    XF86XK_AudioPlay,          spawn,          {.v = cmds[CmdMpcToggle]} },
+	{ XK_NO_MOD,    XF86XK_AudioPause,         spawn,          {.v = cmds[CmdMpcToggle]} },
+	{ XK_NO_MOD,    XF86XK_AudioPrev,          spawn,          {.v = cmds[CmdMpcPrev]} },
+	{ XK_NO_MOD,    XF86XK_AudioNext,          spawn,          {.v = cmds[CmdMpcNext]} },
+	{ ControlMask,  XF86XK_AudioPrev,          spawn,          {.v = cmds[CmdMpcSeekBack]} },
+	{ ControlMask,  XF86XK_AudioNext,          spawn,          {.v = cmds[CmdMpcSeekForw]} },
+	{ ShiftMask,    XF86XK_AudioPrev,          spawn,          {.v = cmds[CmdMpcSeekBackL]} },
+	{ ShiftMask,    XF86XK_AudioNext,          spawn,          {.v = cmds[CmdMpcSeekForwL]} }
 };
 
 /* button definitions */
