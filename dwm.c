@@ -131,6 +131,7 @@ typedef struct {
 	KeySym keysym;
 	void (*func)(const Arg *);
 	const Arg arg;
+	unsigned int type;
 } Key;
 
 typedef struct {
@@ -331,6 +332,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
 	[Expose] = expose,
 	[FocusIn] = focusin,
 	[KeyPress] = keypress,
+	[KeyRelease] = keypress,
 	[MappingNotify] = mappingnotify,
 	[MapRequest] = maprequest,
 	[MotionNotify] = motionnotify,
@@ -1282,6 +1284,7 @@ keypress(XEvent *e)
 	for (i = 0; i < LENGTH(keys); i++)
 		if (keysym == keys[i].keysym
 		&& CLEANMASK(keys[i].mod) == CLEANMASK(ev->state)
+		&& (ev->type == keys[i].type || (!keys[i].type && ev->type == KeyPress))
 		&& keys[i].func)
 			keys[i].func(&(keys[i].arg));
 }

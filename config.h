@@ -74,16 +74,17 @@ static const Layout layouts[] = {
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} }
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+#define XDGPICS "~/pics"
 
 /* commands */
 enum {
 	CmdDmenu, CmdSt, CmdPAMute, CmdPAVolUp, CmdPAVolUpU, CmdPAVolDown, CmdPAVolDownU,
 	CmdMpcToggle, CmdMpcPrev, CmdMpcNext, CmdMpcSeekBack, CmdMpcSeekForw, CmdMpcSeekBackL,
-	CmdMpcSeekForwL, CmdLast };
+	CmdMpcSeekForwL, CmdScrotScreen, CmdScrotRegion, CmdLast };
 
 static const char *cmds[][CmdLast] = {
 	[CmdDmenu]        = { "dmenu_run", NULL },
@@ -100,6 +101,8 @@ static const char *cmds[][CmdLast] = {
 	[CmdMpcSeekForw]  = { "mpc" , "seek", "+10", NULL},
 	[CmdMpcSeekBackL] = { "mpc" , "seek", "-1:00",  NULL},
 	[CmdMpcSeekForwL] = { "mpc" , "seek", "+1:00", NULL},
+	[CmdScrotScreen]  = {"scrot", "-e", "xclip -selection clipboard -target image/png '$f'", "-e", "mv $f ~/pics/screenshots/",  NULL},
+	[CmdScrotRegion]  = {"scrot", "-s", "-e", "xclip -selection clipboard -target image/png '$f'", "-e", "mv $f ~/pics/screenshots/", NULL},
 };
 
 static Key keys[] = {
@@ -128,15 +131,6 @@ static Key keys[] = {
 	{ MODKEY|ALTKEY,                XK_2,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY|ALTKEY,                XK_3,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY|ALTKEY,                XK_4,      setlayout,      {.v = &layouts[3]} },
-	TAGKEYS(                        XK_1,                      0)
-	TAGKEYS(                        XK_2,                      1)
-	TAGKEYS(                        XK_3,                      2)
-	TAGKEYS(                        XK_4,                      3)
-	TAGKEYS(                        XK_5,                      4)
-	TAGKEYS(                        XK_6,                      5)
-	TAGKEYS(                        XK_7,                      6)
-	TAGKEYS(                        XK_8,                      7)
-	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} },
@@ -153,7 +147,22 @@ static Key keys[] = {
 	{ ControlMask,  XF86XK_AudioPrev,          spawn,          {.v = cmds[CmdMpcSeekBack]} },
 	{ ControlMask,  XF86XK_AudioNext,          spawn,          {.v = cmds[CmdMpcSeekForw]} },
 	{ ShiftMask,    XF86XK_AudioPrev,          spawn,          {.v = cmds[CmdMpcSeekBackL]} },
-	{ ShiftMask,    XF86XK_AudioNext,          spawn,          {.v = cmds[CmdMpcSeekForwL]} }
+	{ ShiftMask,    XF86XK_AudioNext,          spawn,          {.v = cmds[CmdMpcSeekForwL]} },
+
+	/* modifier     key            function     argument                        event */
+	{ XK_NO_MOD,    XK_Print,      spawn,       {.v = cmds[CmdScrotScreen]},    KeyRelease },
+	{ ControlMask,  XK_Print,      spawn,       {.v = cmds[CmdScrotRegion]},    KeyRelease },
+
+	/*      trigger   tag */
+	TAGKEYS(XK_1,     0),
+	TAGKEYS(XK_2,     1),
+	TAGKEYS(XK_3,     2),
+	TAGKEYS(XK_4,     3),
+	TAGKEYS(XK_5,     4),
+	TAGKEYS(XK_6,     5),
+	TAGKEYS(XK_7,     6),
+	TAGKEYS(XK_8,     7),
+	TAGKEYS(XK_9,     8),
 };
 
 /* button definitions */
