@@ -39,7 +39,7 @@ static const char *colors[][3] = {
 };
 
 /* tagging */
-static const char *tags[] = { "  ", "  ", "  ", "  ", "5", "6", "7", "8", "9" };
+static const char *tags[] = { "  ", "  ", "  ", "  ", "  ", "6", "7", "8", "9" };
 static const char *tagsalt[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
@@ -84,7 +84,8 @@ static const Layout layouts[] = {
 enum {
 	CmdDmenu, CmdSt, CmdPAMute, CmdPAVolUp, CmdPAVolUpU, CmdPAVolDown, CmdPAVolDownU,
 	CmdMpcToggle, CmdMpcPrev, CmdMpcNext, CmdMpcSeekBack, CmdMpcSeekForw, CmdMpcSeekBackL,
-	CmdMpcSeekForwL, CmdScrotScreen, CmdScrotRegion, CmdLast };
+	CmdMpcSeekForwL, CmdScrotScreen, CmdScrotRegion, CmdLast
+};
 
 static const char *cmds[][CmdLast] = {
 	[CmdDmenu]        = { "dmenu_run", NULL },
@@ -95,8 +96,8 @@ static const char *cmds[][CmdLast] = {
 	[CmdPAVolDown]    = { "pamixer" , "--max-volume=50", "-d5", NULL },
 	[CmdPAVolDownU]   = { "pamixer" , "-d5", NULL },
 	[CmdMpcToggle]    = { "mpc" , "toggle", NULL},
-	[CmdMpcPrev]      = { "mpc" , "next", NULL},
-	[CmdMpcNext]      = { "mpc" , "prev", NULL},
+	[CmdMpcPrev]      = { "mpc" , "prev", NULL},
+	[CmdMpcNext]      = { "mpc" , "next", NULL},
 	[CmdMpcSeekBack]  = { "mpc" , "seek", "-10",  NULL},
 	[CmdMpcSeekForw]  = { "mpc" , "seek", "+10", NULL},
 	[CmdMpcSeekBackL] = { "mpc" , "seek", "-1:00",  NULL},
