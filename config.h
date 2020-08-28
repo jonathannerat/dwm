@@ -15,9 +15,9 @@ static const int smartgaps          = 0;  /* 1 means no outer gap when there is 
 static const int showbar            = 1;  /* 0 means no bar */
 static const int topbar             = 1;  /* 0 means bottom bar */
 static const int startontag         = 0;  /* 0 means no tag active on start */
-static const int vertpad            = 5;  /* vertical padding of bar */
-static const int sidepad            = 5;  /* horizontal padding of bar */
-static const int barheight          = 0;  /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
+static const int vertpad            = 0;  /* vertical padding of bar */
+static const int sidepad            = 0;  /* horizontal padding of bar */
+static const int barheight          = 18;  /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
