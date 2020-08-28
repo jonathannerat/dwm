@@ -15,9 +15,9 @@ static const int smartgaps          = 0;  /* 1 means no outer gap when there is 
 static const int showbar            = 1;  /* 0 means no bar */
 static const int topbar             = 1;  /* 0 means bottom bar */
 static const int startontag         = 0;  /* 0 means no tag active on start */
-static const int vertpad            = 5;  /* vertical padding of bar */
-static const int sidepad            = 5;  /* horizontal padding of bar */
-static const int barheight          = 0;  /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
+static const int vertpad            = 0;  /* vertical padding of bar */
+static const int sidepad            = 0;  /* horizontal padding of bar */
+static const int barheight          = 18;  /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
@@ -48,8 +48,6 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class     instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
-	{ "Gimp",    NULL,     NULL,           0,         1,          0,           0,        -1 },
-	{ "Firefox", NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
 	{ "st",      NULL,     NULL,           0,         0,          1,           0,        -1 },
 	{ NULL,      NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
 };
@@ -84,7 +82,8 @@ static const Layout layouts[] = {
 enum {
 	CmdDmenu, CmdSt, CmdPAMute, CmdPAVolUp, CmdPAVolUpU, CmdPAVolDown, CmdPAVolDownU,
 	CmdMpcToggle, CmdMpcPrev, CmdMpcNext, CmdMpcSeekBack, CmdMpcSeekForw, CmdMpcSeekBackL,
-	CmdMpcSeekForwL, CmdScrotScreen, CmdScrotRegion, CmdLast };
+	CmdMpcSeekForwL, CmdScrotScreen, CmdScrotRegion, CmdSlock, CmdLast
+};
 
 static const char *cmds[][CmdLast] = {
 	[CmdDmenu]        = { "dmenu_run", NULL },
@@ -95,14 +94,15 @@ static const char *cmds[][CmdLast] = {
 	[CmdPAVolDown]    = { "pamixer" , "--max-volume=50", "-d5", NULL },
 	[CmdPAVolDownU]   = { "pamixer" , "-d5", NULL },
 	[CmdMpcToggle]    = { "mpc" , "toggle", NULL},
-	[CmdMpcPrev]      = { "mpc" , "next", NULL},
-	[CmdMpcNext]      = { "mpc" , "prev", NULL},
+	[CmdMpcPrev]      = { "mpc" , "prev", NULL},
+	[CmdMpcNext]      = { "mpc" , "next", NULL},
 	[CmdMpcSeekBack]  = { "mpc" , "seek", "-10",  NULL},
 	[CmdMpcSeekForw]  = { "mpc" , "seek", "+10", NULL},
 	[CmdMpcSeekBackL] = { "mpc" , "seek", "-1:00",  NULL},
 	[CmdMpcSeekForwL] = { "mpc" , "seek", "+1:00", NULL},
 	[CmdScrotScreen]  = {"scrot", "-e", "xclip -selection clipboard -target image/png '$f'", "-e", "mv $f ~/pics/screenshots/",  NULL},
 	[CmdScrotRegion]  = {"scrot", "-s", "-e", "xclip -selection clipboard -target image/png '$f'", "-e", "mv $f ~/pics/screenshots/", NULL},
+	[CmdSlock]        = {"slock", NULL},
 };
 
 static Key keys[] = {
@@ -113,28 +113,33 @@ static Key keys[] = {
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
+	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY|ControlMask,           XK_space,  setlayout,      {0} },
+	{ MODKEY|ShiftMask,             XK_l,      spawn,          {.v = cmds[CmdSlock] } },
+	{ MODKEY,                       XK_n,      incrigaps,      {.i = -5} },
+	{ MODKEY,                       XK_m,      incrigaps,      {.i = +5} },
+	{ MODKEY|ShiftMask,             XK_n,      incrogaps,      {.i = -5} },
+	{ MODKEY|ShiftMask,             XK_m,      incrogaps,      {.i = +5} },
+	{ MODKEY|ALTKEY,                XK_n,      defaultgaps,    {0} },
+	{ MODKEY|ALTKEY,                XK_m,      togglegaps,     {0} },
 	{ MODKEY|ShiftMask,             XK_f,      togglefloating, {0} },
 	{ MODKEY,                       XK_f,      togglefullscr,  {0} },
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+	{ MODKEY,                       XK_q,      killclient,     {0} },
+	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	{ MODKEY,                       XK_n,      togglealttag,   {0} },
+	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY|ALTKEY,                XK_1,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY|ALTKEY,                XK_2,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY|ALTKEY,                XK_3,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY|ALTKEY,                XK_4,      setlayout,      {.v = &layouts[3]} },
-	{ MODKEY,                       XK_q,      killclient,     {0} },
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} },
-	{ MODKEY,                       XK_p,      spawnoverbar,   {.v = cmds[CmdDmenu] } },
+	{ MODKEY,                       XK_p,      spawn,          {.v = cmds[CmdDmenu] } },
 	{ XK_NO_MOD,    XF86XK_AudioMute,          spawn,          {.v = cmds[CmdPAMute]} },
 	{ XK_NO_MOD,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDown]} },
 	{ ShiftMask,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDownU]} },
