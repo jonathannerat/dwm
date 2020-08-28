@@ -39,7 +39,7 @@ static const char *colors[][3] = {
 };
 
 /* tagging */
-static const char *tags[] = { "  ", "  ", "  ", "  ", "  ", "6", "7", "8", "9" };
+static const char *tags[] = { "   ", "   ", "   ", "   ", "   ", "6", "7", "8", "9" };
 static const char *tagsalt[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
@@ -114,28 +114,32 @@ static Key keys[] = {
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
+	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY|ControlMask,           XK_space,  setlayout,      {0} },
+	{ MODKEY,                       XK_n,      incrigaps,      {.i = -5} },
+	{ MODKEY,                       XK_m,      incrigaps,      {.i = +5} },
+	{ MODKEY|ShiftMask,             XK_n,      incrogaps,      {.i = -5} },
+	{ MODKEY|ShiftMask,             XK_m,      incrogaps,      {.i = +5} },
+	{ MODKEY|ALTKEY,                XK_n,      defaultgaps,    {0} },
+	{ MODKEY|ALTKEY,                XK_m,      togglegaps,     {0} },
 	{ MODKEY|ShiftMask,             XK_f,      togglefloating, {0} },
 	{ MODKEY,                       XK_f,      togglefullscr,  {0} },
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+	{ MODKEY,                       XK_q,      killclient,     {0} },
+	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	{ MODKEY,                       XK_n,      togglealttag,   {0} },
+	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY|ALTKEY,                XK_1,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY|ALTKEY,                XK_2,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY|ALTKEY,                XK_3,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY|ALTKEY,                XK_4,      setlayout,      {.v = &layouts[3]} },
-	{ MODKEY,                       XK_q,      killclient,     {0} },
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} },
-	{ MODKEY,                       XK_p,      spawnoverbar,   {.v = cmds[CmdDmenu] } },
+	{ MODKEY,                       XK_p,      spawn,          {.v = cmds[CmdDmenu] } },
 	{ XK_NO_MOD,    XF86XK_AudioMute,          spawn,          {.v = cmds[CmdPAMute]} },
 	{ XK_NO_MOD,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDown]} },
 	{ ShiftMask,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDownU]} },
