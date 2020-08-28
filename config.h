@@ -82,7 +82,7 @@ static const Layout layouts[] = {
 enum {
 	CmdDmenu, CmdSt, CmdPAMute, CmdPAVolUp, CmdPAVolUpU, CmdPAVolDown, CmdPAVolDownU,
 	CmdMpcToggle, CmdMpcPrev, CmdMpcNext, CmdMpcSeekBack, CmdMpcSeekForw, CmdMpcSeekBackL,
-	CmdMpcSeekForwL, CmdScrotScreen, CmdScrotRegion, CmdLast
+	CmdMpcSeekForwL, CmdScrotScreen, CmdScrotRegion, CmdSlock, CmdLast
 };
 
 static const char *cmds[][CmdLast] = {
@@ -102,6 +102,7 @@ static const char *cmds[][CmdLast] = {
 	[CmdMpcSeekForwL] = { "mpc" , "seek", "+1:00", NULL},
 	[CmdScrotScreen]  = {"scrot", "-e", "xclip -selection clipboard -target image/png '$f'", "-e", "mv $f ~/pics/screenshots/",  NULL},
 	[CmdScrotRegion]  = {"scrot", "-s", "-e", "xclip -selection clipboard -target image/png '$f'", "-e", "mv $f ~/pics/screenshots/", NULL},
+	[CmdSlock]        = {"slock", NULL},
 };
 
 static Key keys[] = {
@@ -116,6 +117,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
+	{ MODKEY|ShiftMask,             XK_l,      spawn,          {.v = cmds[CmdSlock] } },
 	{ MODKEY,                       XK_n,      incrigaps,      {.i = -5} },
 	{ MODKEY,                       XK_m,      incrigaps,      {.i = +5} },
 	{ MODKEY|ShiftMask,             XK_n,      incrogaps,      {.i = -5} },
