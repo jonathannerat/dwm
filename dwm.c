@@ -2131,6 +2131,10 @@ sigterm(int unused)
 void
 spawn(const Arg *arg)
 {
+	if (arg->v == dmenu_unicode_cmd) {
+		sprintf(dmenuwin, "%ld", selmon->sel->win);
+	}
+
 	if (fork() == 0) {
 		if (dpy)
 			close(ConnectionNumber(dpy));

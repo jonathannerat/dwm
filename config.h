@@ -114,6 +114,9 @@ static const char *cmds[][CmdLast] = {
 	[CmdSlock]        = {"slock", NULL},
 };
 
+static char dmenuwin[20] = "";
+static const char *dmenu_unicode_cmd[] = { "dmenu-unicode", dmenuwin, NULL };
+
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_Tab,    view,           {0} },
@@ -140,6 +143,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} },
 	{ MODKEY,                       XK_t,      togglealttag,   {0} },
+	{ MODKEY,                       XK_u,      spawn,          {.v = dmenu_unicode_cmd} },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
