@@ -39,8 +39,8 @@ static const char *colors[][3] = {
 };
 
 /* tagging */
-static const char *tags[] =    { "   ", "   ", "   ", "   ", "5", "6", "7", "   ", "   " };
-static const char *tagsalt[] = { "1",    "2",    "3",    "4",    "5", "6", "7", "8",    "9" };
+static const char *tags[]    = { "   ", "   ", "   ", "   ", "5", "6", "7", "   ", "   " };
+static const char *tagsalt[] = { "1", "2", "3", "4", "5", "6", "7", " 8 ", " 9 " };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -48,15 +48,15 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class  |  instance  |  title  |  tagsmask | floats | isterm | noswall | mon */
-	{ "st",      NULL,        NULL,     0,         0,       1,       0,        -1 },
-	{ "st",    "floating-st", NULL,     0,         1,       1,       0,        -1 },
-	{ NULL,      NULL,  "Event Tester", 0,         0,       0,       1,        -1 }, /* xev */
-	{ "firefox", NULL,        NULL,     1 << 1,    0,       0,       1,        -1 },
-	{ "DBeaver", NULL,        NULL,     1 << 2,    0,       0,       1,        -1 },
-	{ "xfreerdp",NULL,        NULL,     1 << 3,    0,       0,       1,        -1 },
+	{ "st",       NULL,       NULL,     0,         0,       1,       0,        -1 },
+	{ "st",       "floating-st",NULL,   0,         1,       1,       0,        -1 },
+	{ NULL,       NULL,       "Event Tester", 0,   0,       0,       1,        -1 }, /* xev */
+	{ "firefox",  NULL,       NULL,     1 << 1,    0,       0,       0,        -1 },
+	{ "DBeaver",  NULL,       NULL,     1 << 2,    0,       0,       1,        -1 },
+	{ "xfreerdp", NULL,       NULL,     1 << 3,    0,       0,       0,        -1 },
 	{ "Vncviewer",NULL,       NULL,     1 << 3,    0,       0,       1,        -1 },
-	{ "discord", NULL,        NULL,     1 << 7,    0,       0,       1,        -1 },
-	{ "TelegramDesktop",NULL, NULL,     1 << 7,    0,       0,       1,        -1 },
+	{ "discord",  NULL,       NULL,     1 << 7,    0,       0,       0,        -1 },
+	{ "TelegramDesktop",NULL, NULL,     1 << 7,    0,       0,       0,        -1 },
 	{ "Steam",   NULL,        NULL,     1 << 8,    0,       0,       1,        -1 },
 	{ "retroarch",NULL,       NULL,     1 << 8,    0,       0,       1,        -1 },
 };
@@ -88,12 +88,10 @@ static const Layout layouts[] = {
 #define XDGPICS "~/pics"
 
 /* commands */
-enum {
-	CmdDmenu, CmdSt, CmdFloatingSt, CmdPAMute, CmdPAVolUp, CmdPAVolUpU,
+enum { CmdDmenu, CmdSt, CmdFloatingSt, CmdPAMute, CmdPAVolUp, CmdPAVolUpU,
 	CmdPAVolDown, CmdPAVolDownU, CmdMpcToggle, CmdMpcPrev, CmdMpcNext,
 	CmdMpcSeekBack, CmdMpcSeekForw, CmdMpcSeekBackL, CmdMpcSeekForwL,
-	CmdScrotScreen, CmdScrotRegion, CmdSlock, CmdLast
-};
+	CmdScrotScreen, CmdScrotRegion, CmdSlock, CmdLast };
 
 static const char *cmds[][CmdLast] = {
 	[CmdDmenu]        = { "dmenu_run", NULL },
