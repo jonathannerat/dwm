@@ -82,7 +82,7 @@
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
-enum { SchemeNorm, SchemeSel, SchemeStatus, SchemeTagsSel, SchemeTagsNorm, SchemeInfoSel, SchemeInfoNorm }; /* color schemes */
+enum { SchemeNorm, SchemeSel, SchemeUrg, SchemeStatus, SchemeTagsSel, SchemeTagsNorm, SchemeTagsUrg, SchemeInfoSel, SchemeInfoNorm }; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetSystemTray, NetSystemTrayOP, NetSystemTrayOrientation, NetSystemTrayOrientationHorz,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
@@ -213,6 +213,7 @@ static void focus(Client *c);
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
+static void focusmaster(const Arg *arg);
 static Atom getatomprop(Client *c, Atom prop);
 static int getrootptr(int *x, int *y);
 static long getstate(Window w);
@@ -883,17 +884,22 @@ deck(Monitor *m)
 		mw = m->nmaster ? (m->ww + m->gappiv*ie) * m->mfact : 0;
 		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n - m->nmaster);
 	} else {
-		mw = m->ww;
+		mw = m->ww - 2*m->gappov*oe + m->gappiv*ie;
 	}
-	for(i = 0, my = gappoh*oe, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+	for(i = 0, my = m->gappoh*oe, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if(i < m->nmaster) {
 			r = MIN(n, m->nmaster) - i;
 			h = (m->wh - my - m->gappoh*oe - m->gappih*ie * (r - 1)) / r;
 			resize(c, m->wx + m->gappov*oe, m->wy + my, mw - (2*c->bw) - m->gappiv*ie, h - (2*c->bw), 0);
 			if (my + HEIGHT(c) + m->gappih*ie < m->wh)
 				my += HEIGHT(c) + m->gappih*ie;
-		} else
-			resize(c, m->wx + mw + m->gappoh*oe, m->wy + gappoh*oe, m->ww - mw - (2*c->bw) - 2*gappov*oe, m->wh - 2*gappoh*oe - (2*c->bw), False);
+		} else {
+			resize(c,
+				m->wx + mw + m->gappoh*oe,
+				m->wy + m->gappoh*oe,
+				m->ww - mw - (2*c->bw) - 2*m->gappov*oe,
+				m->wh - 2*m->gappoh*oe - (2*c->bw), False);
+		}
 }
 
 void
@@ -985,12 +991,11 @@ drawbar(Monitor *m)
 
 		w = TEXTW(tags[i]);
 		wdelta = selmon->alttag ? abs(TEXTW(tags[i]) - TEXTW(tagsalt[i])) / 2 : 0;
-		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeTagsSel : SchemeTagsNorm]);
-		drw_text(drw, x, 0, w, bh, wdelta + lrpad / 2, (selmon->alttag ? tagsalt[i] : tags[i]), urg & 1 << i);
-		/* if (occ & 1 << i) */
-		/* 	drw_rect(drw, x + boxw, 0, w - ( 2 * boxw + 1), boxw, */
-		/* 	         m == selmon && selmon->sel && selmon->sel->tags & 1 << i, */
-		/* 	         urg & 1 << i); */
+		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeTagsSel : urg & 1 << i ? SchemeTagsUrg : SchemeTagsNorm]);
+		drw_text(drw, x, 0, w, bh, wdelta + lrpad / 2, (selmon->alttag ? tagsalt[i] : tags[i]), False);
+		drw_rect(drw, x + boxw, bh - boxw + 1, w - ( 2 * boxw + 1), boxw,
+		         m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
+		         False);
 
 		x += w;
 	}
@@ -1068,7 +1073,7 @@ focus(Client *c)
 		detachstack(c);
 		attachstack(c);
 		grabbuttons(c, 1);
-		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
+		XSetWindowBorder(dpy, c->win, scheme[c->isurgent ? SchemeUrg : SchemeSel][ColBorder].pixel);
 		setfocus(c);
 	} else {
 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
@@ -1119,6 +1124,34 @@ focusstack(const Arg *arg)
 				c = i;
 		if (!c)
 			for (; i; i = i->next)
+				if (ISVISIBLE(i))
+					c = i;
+	}
+	if (c) {
+		focus(c);
+		restack(selmon);
+	}
+}
+
+void
+focusmaster(const Arg *arg)
+{
+	unsigned int n, m = 0, k;
+	Client *c, *i;
+
+	for(n = 0, c = nexttiled(selmon->clients); c; c = nexttiled(c->next), n++)
+		if (c == selmon->sel) m = n;
+
+	if (arg->i > 0) {
+		for (c = selmon->sel->next, m++; c && !ISVISIBLE(c); c = c->next, m++);
+		if (!c || m >= selmon->nmaster)
+			for (c = selmon->clients; c && !ISVISIBLE(c); c = c->next);
+	} else {
+		for (i = selmon->clients, k = 0; i != selmon->sel && k < MIN(m, selmon->nmaster); i = i->next, k++)
+			if (ISVISIBLE(i))
+				c = i;
+		if (!c)
+			for (k = 0; i && k < selmon->nmaster; i = i->next, k++)
 				if (ISVISIBLE(i))
 					c = i;
 	}
@@ -1344,7 +1377,7 @@ manage(Window w, XWindowAttributes *wa)
 
 	wc.border_width = c->bw;
 	XConfigureWindow(dpy, w, CWBorderWidth, &wc);
-	XSetWindowBorder(dpy, w, scheme[SchemeNorm][ColBorder].pixel);
+	XSetWindowBorder(dpy, w, scheme[c->isurgent ? SchemeUrg : SchemeNorm][ColBorder].pixel);
 	configure(c); /* propagates border_width, if size doesn't change */
 	updatewindowtype(c);
 	updatesizehints(c);
@@ -2321,7 +2354,7 @@ unfocus(Client *c, int setfocus)
 	if (!c)
 		return;
 	grabbuttons(c, 0);
-	XSetWindowBorder(dpy, c->win, scheme[SchemeNorm][ColBorder].pixel);
+	XSetWindowBorder(dpy, c->win, scheme[c->isurgent ? SchemeUrg : SchemeNorm][ColBorder].pixel);
 	if (setfocus) {
 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
 		XDeleteProperty(dpy, root, netatom[NetActiveWindow]);

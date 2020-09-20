@@ -5,19 +5,19 @@
 /* appearance */
 static const unsigned int borderpx  = 2;  /* border pixel of windows */
 static const unsigned int snap      = 32; /* snap pixel */
-static const int showsystray        = 1;     /* 0 means no systray */
-static const int swallowfloating    = 1;   /* 1 means swallow floating windows by default */
-static const unsigned int gappih    = 5;  /* horiz inner gap between windows */
-static const unsigned int gappiv    = 5;  /* vert inner gap between windows */
-static const unsigned int gappoh    = 5;  /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov    = 5;  /* vert outer gap between windows and screen edge */
+static const int showsystray        = 1;  /* 0 means no systray */
+static const int swallowfloating    = 1;  /* 1 means swallow floating windows by default */
+static const unsigned int gappih    = INNER_GAPS; /* horiz inner gap between windows */
+static const unsigned int gappiv    = INNER_GAPS; /* vert inner gap between windows */
+static const unsigned int gappoh    = OUTER_GAPS; /* horiz outer gap between windows and screen edge */
+static const unsigned int gappov    = OUTER_GAPS; /* vert outer gap between windows and screen edge */
 static const int smartgaps          = 0;  /* 1 means no outer gap when there is only one window */
 static const int showbar            = 1;  /* 0 means no bar */
 static const int topbar             = 1;  /* 0 means bottom bar */
 static const int startontag         = 0;  /* 0 means no tag active on start */
-static const int vertpad            = 0;  /* vertical padding of bar */
-static const int sidepad            = 0;  /* horizontal padding of bar */
-static const int barheight          = 18;  /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
+static const int vertpad            = OUTER_GAPS; /* vertical padding of bar */
+static const int sidepad            = OUTER_GAPS; /* horizontal padding of bar */
+static const int barheight          = BAR_HEIGHT; /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
@@ -30,11 +30,13 @@ static const char *fonts[]          = {
 static const char *colors[][3] = {
 	/*                   fg           bg           border   */
 	[SchemeNorm]     = { THEME_WHITE, THEME_BLACK, THEME_BRIGHTBLACK },
-	[SchemeSel]      = { THEME_BLACK, THEME_BLUE,  THEME_BLUE  },
+	[SchemeSel]      = { THEME_BLACK, THEME_CYAN,  THEME_CYAN },
+	[SchemeUrg]      = { THEME_BLACK, THEME_MAGENTA, THEME_MAGENTA },
 	[SchemeStatus]   = { THEME_BRIGHTWHITE, THEME_BLACK, NULL },
-	[SchemeTagsSel]  = { THEME_BLACK, THEME_BLUE,  NULL },
+	[SchemeTagsSel]  = { THEME_BLACK, THEME_CYAN,  NULL },
 	[SchemeTagsNorm] = { THEME_WHITE, THEME_BLACK, NULL },
-	[SchemeInfoSel]  = { THEME_BLACK, THEME_BLUE,  NULL },
+	[SchemeTagsUrg]  = { THEME_BLACK, THEME_MAGENTA, NULL },
+	[SchemeInfoSel]  = { THEME_BLACK, THEME_CYAN,  NULL },
 	[SchemeInfoNorm] = { THEME_WHITE, THEME_BLACK, NULL },
 };
 
@@ -91,7 +93,8 @@ static const Layout layouts[] = {
 enum { CmdDmenu, CmdSt, CmdFloatingSt, CmdPAMute, CmdPAVolUp, CmdPAVolUpU,
 	CmdPAVolDown, CmdPAVolDownU, CmdMpcToggle, CmdMpcPrev, CmdMpcNext,
 	CmdMpcSeekBack, CmdMpcSeekForw, CmdMpcSeekBackL, CmdMpcSeekForwL,
-	CmdScrotScreen, CmdScrotRegion, CmdSlock, CmdLast };
+	CmdScrotScreen, CmdScrotRegion, CmdSlock, CmdFirefox, CmdZathura,
+	CmdLast };
 
 static const char *cmds[][CmdLast] = {
 	[CmdDmenu]        = { "dmenu_run", NULL },
@@ -112,6 +115,8 @@ static const char *cmds[][CmdLast] = {
 	[CmdScrotScreen]  = {"scrot", "-e", "xclip -selection clipboard -target image/png '$f'; mv $f ~/pics/screenshots/",  NULL},
 	[CmdScrotRegion]  = {"scrot", "-s", "-e", "xclip -selection clipboard -target image/png '$f'; mv $f ~/pics/screenshots/", NULL},
 	[CmdSlock]        = {"slock", NULL},
+	[CmdFirefox]      = {"firefox", NULL},
+	[CmdZathura]      = {"tabbed", "-c", "zathura", "-e", NULL},
 };
 
 static char dmenuwin[20] = "";
@@ -128,6 +133,8 @@ static Key keys[] = {
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_k,      focusmaster,    {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_j,      focusmaster,    {.i = +1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY|ShiftMask,             XK_l,      spawn,          {.v = cmds[CmdSlock] } },
@@ -155,6 +162,9 @@ static Key keys[] = {
 	{ MODKEY|ALTKEY,                XK_3,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY|ALTKEY,                XK_4,      setlayout,      {.v = &layouts[3]} },
 	{ MODKEY,                       XK_p,      spawn,          {.v = cmds[CmdDmenu] } },
+	{ MODKEY|ControlMask,           XK_u,      spawn,          {.v = cmds[CmdFirefox] } },
+	{ MODKEY|ControlMask,           XK_i,      spawn,          {.v = cmds[CmdZathura] } },
+	{ MODKEY|ControlMask,           XK_g,      spawn,          SHCMD("grabc | tr -d '\\n' | xclip -selection clipboard") },
 	{ XK_NO_MOD,    XF86XK_AudioMute,          spawn,          {.v = cmds[CmdPAMute]} },
 	{ XK_NO_MOD,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDown]} },
 	{ ShiftMask,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDownU]} },
