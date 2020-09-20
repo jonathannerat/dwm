@@ -2132,7 +2132,7 @@ void
 spawn(const Arg *arg)
 {
 	if (arg->v == dmenu_unicode_cmd) {
-		sprintf(dmenuwin, "%ld", selmon->sel->win);
+		sprintf(dmenuwin, "%ld", selmon->sel ? selmon->sel->win : root);
 	}
 
 	if (fork() == 0) {
