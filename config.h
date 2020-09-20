@@ -52,10 +52,13 @@ static const Rule rules[] = {
 	{ "st",    "floating-st", NULL,     0,         1,       1,       0,        -1 },
 	{ NULL,      NULL,  "Event Tester", 0,         0,       0,       1,        -1 }, /* xev */
 	{ "firefox", NULL,        NULL,     1 << 1,    0,       0,       1,        -1 },
+	{ "DBeaver", NULL,        NULL,     1 << 2,    0,       0,       1,        -1 },
 	{ "xfreerdp",NULL,        NULL,     1 << 3,    0,       0,       1,        -1 },
-	{ NULL,    "discord",     NULL,     1 << 7,    0,       0,       1,        -1 },
-	{ NULL,"telegram-desktop",NULL,     1 << 7,    0,       0,       1,        -1 },
-	{ NULL,     "DBeaver",    NULL,     1 << 2,    0,       0,       1,        -1 },
+	{ "Vncviewer",NULL,       NULL,     1 << 3,    0,       0,       1,        -1 },
+	{ "discord", NULL,        NULL,     1 << 7,    0,       0,       1,        -1 },
+	{ "TelegramDesktop",NULL, NULL,     1 << 7,    0,       0,       1,        -1 },
+	{ "Steam",   NULL,        NULL,     1 << 8,    0,       0,       1,        -1 },
+	{ "retroarch",NULL,       NULL,     1 << 8,    0,       0,       1,        -1 },
 };
 
 /* layout(s) */
