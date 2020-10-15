@@ -39,17 +39,22 @@ static const char *colors[][3] = {
 };
 
 /* tagging */
-static const char *tags[] = { "   ", "   ", "   ", "   ", "   ", "6", "7", "8", "9" };
-static const char *tagsalt[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tags[] = { "   ", "   ", "   ", "   ", "5", "6", "7", "   ", "   " };
+static const char *tagsalt[] = { "1", "2", "3", "4", "5", "6", "7", " 8 ", " 9 " };
 
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class     instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
-	{ "st",      NULL,     NULL,           0,         0,          1,           0,        -1 },
-	{ NULL,      NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
+	/* class     instance        title           tags mask  isfloating  isterminal  noswallow  monitor */
+	{ "st",       NULL,           NULL,           0,         0,          1,           0,        -1 },
+	{ "st",       "floating-st",  NULL,           0,         1,          1,           0,        -1 },
+	{ NULL,       NULL,           "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
+	{ "firefox",  NULL,           NULL,           1 << 1,    0,          0,           0,        -1 },
+	{ "xfreerdp", NULL,           NULL,           1 << 3,    0,          0,           0,        -1 },
+	{ "discord",  NULL,           NULL,           1 << 7,    0,          0,           0,        -1 },
+	{ "TelegramDesktop",  NULL,  NULL,            1 << 7,    0,          0,           0,        -1 },
 };
 
 /* layout(s) */
@@ -79,15 +84,15 @@ static const Layout layouts[] = {
 #define XDGPICS "~/pics"
 
 /* commands */
-enum {
-	CmdDmenu, CmdSt, CmdPAMute, CmdPAVolUp, CmdPAVolUpU, CmdPAVolDown, CmdPAVolDownU,
-	CmdMpcToggle, CmdMpcPrev, CmdMpcNext, CmdMpcSeekBack, CmdMpcSeekForw, CmdMpcSeekBackL,
-	CmdMpcSeekForwL, CmdScrotScreen, CmdScrotRegion, CmdSlock, CmdLast
-};
+enum { CmdDmenu, CmdSt, CmdFloatingSt, CmdPAMute, CmdPAVolUp, CmdPAVolUpU,
+	CmdPAVolDown, CmdPAVolDownU, CmdMpcToggle, CmdMpcPrev, CmdMpcNext,
+	CmdMpcSeekBack, CmdMpcSeekForw, CmdMpcSeekBackL, CmdMpcSeekForwL,
+	CmdScrotScreen, CmdScrotRegion, CmdSlock, CmdLast };
 
 static const char *cmds[][CmdLast] = {
 	[CmdDmenu]        = { "dmenu_run", NULL },
 	[CmdSt]           = { "st", NULL },
+	[CmdFloatingSt]   = { "st", "-n", "floating-st", NULL },
 	[CmdPAMute]       = { "pamixer" , "-t", NULL },
 	[CmdPAVolUp]      = { "pamixer" , "--max-volume=50", "-i5", NULL },
 	[CmdPAVolUpU]     = { "pamixer" , "-i5", NULL },
@@ -100,8 +105,8 @@ static const char *cmds[][CmdLast] = {
 	[CmdMpcSeekForw]  = { "mpc" , "seek", "+10", NULL},
 	[CmdMpcSeekBackL] = { "mpc" , "seek", "-1:00",  NULL},
 	[CmdMpcSeekForwL] = { "mpc" , "seek", "+1:00", NULL},
-	[CmdScrotScreen]  = {"scrot", "-e", "xclip -selection clipboard -target image/png '$f'", "-e", "mv $f ~/pics/screenshots/",  NULL},
-	[CmdScrotRegion]  = {"scrot", "-s", "-e", "xclip -selection clipboard -target image/png '$f'", "-e", "mv $f ~/pics/screenshots/", NULL},
+	[CmdScrotScreen]  = {"scrot", "-e", "xclip -selection clipboard -target image/png '$f'; mv $f ~/pics/screenshots/",  NULL},
+	[CmdScrotRegion]  = {"scrot", "-s", "-e", "xclip -selection clipboard -target image/png '$f'; mv $f ~/pics/screenshots/", NULL},
 	[CmdSlock]        = {"slock", NULL},
 };
 
@@ -110,6 +115,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = cmds[CmdSt] } },
+	{ MODKEY|ALTKEY,                XK_Return, spawn,          {.v = cmds[CmdFloatingSt] } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
@@ -129,6 +135,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 	{ MODKEY|ShiftMask,             XK_r,      quit,           {1} },
+	{ MODKEY,                       XK_t,      togglealttag,   {0} },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
