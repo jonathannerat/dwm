@@ -21,7 +21,7 @@ static const int barheight          = 18;  /* 0 means that dwm will calculate ba
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
-static const char *fonts[]          = { 
+static const char *fonts[]          = {
 	THEME_FONT,
 #ifdef EXTRA_FONTS
 	EXTRA_FONTS
@@ -39,7 +39,7 @@ static const char *colors[][3] = {
 };
 
 /* tagging */
-static const char *tags[] = { "   ", "   ", "   ", "   ", "5", "6", "7", "   ", "   " };
+static const char *tags[]    = { "   ", "   ", "   ", "   ", "5", "6", "7", "   ", "   " };
 static const char *tagsalt[] = { "1", "2", "3", "4", "5", "6", "7", " 8 ", " 9 " };
 
 static const Rule rules[] = {
@@ -47,14 +47,15 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class     instance        title           tags mask  isfloating  isterminal  noswallow  monitor */
-	{ "st",       NULL,           NULL,           0,         0,          1,           0,        -1 },
-	{ "st",       "floating-st",  NULL,           0,         1,          1,           0,        -1 },
-	{ NULL,       NULL,           "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
-	{ "firefox",  NULL,           NULL,           1 << 1,    0,          0,           0,        -1 },
-	{ "xfreerdp", NULL,           NULL,           1 << 3,    0,          0,           0,        -1 },
-	{ "discord",  NULL,           NULL,           1 << 7,    0,          0,           0,        -1 },
-	{ "TelegramDesktop",  NULL,  NULL,            1 << 7,    0,          0,           0,        -1 },
+	/* class  |  instance  |  title  |  tagsmask | floats | isterm | noswall | mon */
+	{ "st",       NULL,       NULL,     0,         0,       1,       0,        -1 },
+	{ "st",       "floating-st",NULL,   0,         1,       1,       0,        -1 },
+	{ NULL,       NULL,       "Event Tester", 0,   0,       0,       1,        -1 }, /* xev */
+	{ "firefox",  NULL,       NULL,     1 << 1,    0,       0,       0,        -1 },
+	{ "xfreerdp", NULL,       NULL,     1 << 3,    0,       0,       0,        -1 },
+	{ "discord",  NULL,       NULL,     1 << 7,    0,       0,       0,        -1 },
+	{ "TelegramDesktop",NULL, NULL,     1 << 7,    0,       0,       0,        -1 },
+	{ "DBeaver",  NULL,       NULL,     1 << 2,    0,       0,       1,        -1 },
 };
 
 /* layout(s) */
