@@ -213,6 +213,7 @@ static void focus(Client *c);
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
+static void focusmaster(const Arg *arg);
 static Atom getatomprop(Client *c, Atom prop);
 static int getrootptr(int *x, int *y);
 static long getstate(Window w);
@@ -1124,6 +1125,34 @@ focusstack(const Arg *arg)
 				c = i;
 		if (!c)
 			for (; i; i = i->next)
+				if (ISVISIBLE(i))
+					c = i;
+	}
+	if (c) {
+		focus(c);
+		restack(selmon);
+	}
+}
+
+void
+focusmaster(const Arg *arg)
+{
+	unsigned int n, m = 0, k;
+	Client *c, *i;
+
+	for(n = 0, c = nexttiled(selmon->clients); c; c = nexttiled(c->next), n++)
+		if (c == selmon->sel) m = n;
+
+	if (arg->i > 0) {
+		for (c = selmon->sel->next, m++; c && !ISVISIBLE(c); c = c->next, m++);
+		if (!c || m >= selmon->nmaster)
+			for (c = selmon->clients; c && !ISVISIBLE(c); c = c->next);
+	} else {
+		for (i = selmon->clients, k = 0; i != selmon->sel && k < MIN(m, selmon->nmaster); i = i->next, k++)
+			if (ISVISIBLE(i))
+				c = i;
+		if (!c)
+			for (k = 0; i && k < selmon->nmaster; i = i->next, k++)
 				if (ISVISIBLE(i))
 					c = i;
 	}
