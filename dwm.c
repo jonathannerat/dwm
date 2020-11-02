@@ -883,17 +883,22 @@ deck(Monitor *m)
 		mw = m->nmaster ? (m->ww + m->gappiv*ie) * m->mfact : 0;
 		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n - m->nmaster);
 	} else {
-		mw = m->ww;
+		mw = m->ww - 2*m->gappov*oe + m->gappiv*ie;
 	}
-	for(i = 0, my = gappoh*oe, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+	for(i = 0, my = m->gappoh*oe, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if(i < m->nmaster) {
 			r = MIN(n, m->nmaster) - i;
 			h = (m->wh - my - m->gappoh*oe - m->gappih*ie * (r - 1)) / r;
 			resize(c, m->wx + m->gappov*oe, m->wy + my, mw - (2*c->bw) - m->gappiv*ie, h - (2*c->bw), 0);
 			if (my + HEIGHT(c) + m->gappih*ie < m->wh)
 				my += HEIGHT(c) + m->gappih*ie;
-		} else
-			resize(c, m->wx + mw + m->gappoh*oe, m->wy + gappoh*oe, m->ww - mw - (2*c->bw) - 2*gappov*oe, m->wh - 2*gappoh*oe - (2*c->bw), False);
+		} else {
+			resize(c,
+				m->wx + mw + m->gappoh*oe,
+				m->wy + m->gappoh*oe,
+				m->ww - mw - (2*c->bw) - 2*m->gappov*oe,
+				m->wh - 2*m->gappoh*oe - (2*c->bw), False);
+		}
 }
 
 void
