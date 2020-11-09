@@ -161,6 +161,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_p,      spawn,          {.v = cmds[CmdDmenu] } },
 	{ MODKEY|ControlMask,           XK_u,      spawn,          {.v = cmds[CmdFirefox] } },
 	{ MODKEY|ControlMask,           XK_i,      spawn,          {.v = cmds[CmdZathura] } },
+	{ MODKEY|ControlMask,           XK_g,      spawn,          SHCMD("grabc | tr -d '\\n' | xclip -selection clipboard") },
 	{ XK_NO_MOD,    XF86XK_AudioMute,          spawn,          {.v = cmds[CmdPAMute]} },
 	{ XK_NO_MOD,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDown]} },
 	{ ShiftMask,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDownU]} },
