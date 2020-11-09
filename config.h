@@ -88,7 +88,8 @@ static const Layout layouts[] = {
 enum { CmdDmenu, CmdSt, CmdFloatingSt, CmdPAMute, CmdPAVolUp, CmdPAVolUpU,
 	CmdPAVolDown, CmdPAVolDownU, CmdMpcToggle, CmdMpcPrev, CmdMpcNext,
 	CmdMpcSeekBack, CmdMpcSeekForw, CmdMpcSeekBackL, CmdMpcSeekForwL,
-	CmdScrotScreen, CmdScrotRegion, CmdSlock, CmdLast };
+	CmdScrotScreen, CmdScrotRegion, CmdSlock, CmdFirefox, CmdZathura,
+	CmdLast };
 
 static const char *cmds[][CmdLast] = {
 	[CmdDmenu]        = { "dmenu_run", NULL },
@@ -109,6 +110,8 @@ static const char *cmds[][CmdLast] = {
 	[CmdScrotScreen]  = {"scrot", "-e", "xclip -selection clipboard -target image/png '$f'; mv $f ~/pics/screenshots/",  NULL},
 	[CmdScrotRegion]  = {"scrot", "-s", "-e", "xclip -selection clipboard -target image/png '$f'; mv $f ~/pics/screenshots/", NULL},
 	[CmdSlock]        = {"slock", NULL},
+	[CmdFirefox]      = {"firefox", NULL},
+	[CmdZathura]      = {"tabbed", "-c", "zathura", "-e", NULL},
 };
 
 static char dmenuwin[20] = "";
@@ -154,6 +157,8 @@ static Key keys[] = {
 	{ MODKEY|ALTKEY,                XK_3,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY|ALTKEY,                XK_4,      setlayout,      {.v = &layouts[3]} },
 	{ MODKEY,                       XK_p,      spawn,          {.v = cmds[CmdDmenu] } },
+	{ MODKEY|ControlMask,           XK_u,      spawn,          {.v = cmds[CmdFirefox] } },
+	{ MODKEY|ControlMask,           XK_i,      spawn,          {.v = cmds[CmdZathura] } },
 	{ XK_NO_MOD,    XF86XK_AudioMute,          spawn,          {.v = cmds[CmdPAMute]} },
 	{ XK_NO_MOD,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDown]} },
 	{ ShiftMask,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDownU]} },
