@@ -28,6 +28,7 @@ config.h:
 	cp config.def.h $@
 
 dwm: ${OBJ}
+	grep -q "Nerd Font Mono" theme.h && sed -i 's/Nerd Font Mono/Nerd Font/' theme.h
 	${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 clean:
