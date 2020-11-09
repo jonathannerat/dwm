@@ -30,11 +30,13 @@ static const char *fonts[]          = {
 static const char *colors[][3] = {
 	/*                   fg           bg           border   */
 	[SchemeNorm]     = { THEME_WHITE, THEME_BLACK, THEME_BRIGHTBLACK },
-	[SchemeSel]      = { THEME_BLACK, THEME_BLUE,  THEME_BLUE  },
+	[SchemeSel]      = { THEME_BLACK, THEME_CYAN,  THEME_CYAN },
+	[SchemeUrg]      = { THEME_BLACK, THEME_MAGENTA, THEME_MAGENTA },
 	[SchemeStatus]   = { THEME_BRIGHTWHITE, THEME_BLACK, NULL },
-	[SchemeTagsSel]  = { THEME_BLACK, THEME_BLUE,  NULL },
+	[SchemeTagsSel]  = { THEME_BLACK, THEME_CYAN,  NULL },
 	[SchemeTagsNorm] = { THEME_WHITE, THEME_BLACK, NULL },
-	[SchemeInfoSel]  = { THEME_BLACK, THEME_BLUE,  NULL },
+	[SchemeTagsUrg]  = { THEME_BLACK, THEME_MAGENTA, NULL },
+	[SchemeInfoSel]  = { THEME_BLACK, THEME_CYAN,  NULL },
 	[SchemeInfoNorm] = { THEME_WHITE, THEME_BLACK, NULL },
 };
 
