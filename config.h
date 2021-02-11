@@ -39,19 +39,25 @@ static const char *colors[][3] = {
 };
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-static const char *tagsalt[] = { "  ", "  ", "  ", "  ", "5", "6", "7", "8", "9" };
+static const char *tags[]    = { "   ", "   ", "   ", "4", "5", "6", "7", "   ", "   " };
+static const char *tagsalt[] = { "1", "2", "3", "4", "5", "6", "7", " 8 ", " 9 " };
 
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class     instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
-	{ "Gimp",    NULL,     NULL,           0,         1,          0,           0,        -1 },
-	{ "Firefox", NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
-	{ "st",      NULL,     NULL,           0,         0,          1,           0,        -1 },
-	{ NULL,      NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
+	/* class  |  instance  |  title  |  tagsmask | floats | isterm | noswall | mon */
+	{ "st",       NULL,       NULL,     0,         0,       1,       0,        -1 },
+	{ "st",       "floating-st",NULL,   0,         1,       1,       0,        -1 },
+	{ NULL,       NULL,       "Event Tester", 0,   0,       0,       1,        -1 }, /* xev */
+	{ "firefox",  NULL,       NULL,     1 << 1,    0,       0,       0,        -1 },
+	{ "DBeaver",  NULL,       NULL,     1 << 2,    0,       0,       1,        -1 },
+	{ "discord",  NULL,       NULL,     1 << 7,    0,       0,       0,        -1 },
+	{ "TelegramDesktop",NULL, NULL,     1 << 7,    0,       0,       0,        -1 },
+	{ "Steam",   NULL,        NULL,     1 << 8,    0,       0,       1,        -1 },
+	{ "retroarch",NULL,       NULL,     1 << 8,    0,       0,       1,        -1 },
+	{ NULL,       NULL,  "Camera:",     1 << 2,    0,       0,       1,        -1 },
 };
 
 /* layout(s) */
@@ -146,10 +152,10 @@ static Key keys[] = {
 	{ ShiftMask,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDownU]} },
 	{ XK_NO_MOD,    XF86XK_AudioRaiseVolume,   spawn,          {.v = cmds[CmdPAVolUp]} },
 	{ ShiftMask,    XF86XK_AudioRaiseVolume,   spawn,          {.v = cmds[CmdPAVolUpU]} },
-	{ XK_NO_MOD,    XF86XK_AudioPlay,          spawn,          {.v = cmds[CmdMpcToggle]} },
-	{ XK_NO_MOD,    XF86XK_AudioPause,         spawn,          {.v = cmds[CmdMpcToggle]} },
-	{ XK_NO_MOD,    XF86XK_AudioPrev,          spawn,          {.v = cmds[CmdMpcPrev]} },
-	{ XK_NO_MOD,    XF86XK_AudioNext,          spawn,          {.v = cmds[CmdMpcNext]} },
+	{ XK_NO_MOD,    XF86XK_AudioPlay,          spawn,          SHCMD("mpc toggle; pkill -RTMIN+1 dwmblocks") },
+	{ XK_NO_MOD,    XF86XK_AudioPause,         spawn,          SHCMD("mpc toggle; pkill -RTMIN+1 dwmblocks") },
+	{ XK_NO_MOD,    XF86XK_AudioPrev,          spawn,          SHCMD("mpc prev; pkill -RTMIN+1 dwmblocks") },
+	{ XK_NO_MOD,    XF86XK_AudioNext,          spawn,          SHCMD("mpc next; pkill -RTMIN+1 dwmblocks") },
 	{ ControlMask,  XF86XK_AudioPrev,          spawn,          {.v = cmds[CmdMpcSeekBack]} },
 	{ ControlMask,  XF86XK_AudioNext,          spawn,          {.v = cmds[CmdMpcSeekForw]} },
 	{ ShiftMask,    XF86XK_AudioPrev,          spawn,          {.v = cmds[CmdMpcSeekBackL]} },
