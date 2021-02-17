@@ -49,16 +49,16 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class  |  instance  |  title  |  tagsmask | floats | isterm | noswall | mon */
-	{ "st",       NULL,       NULL,     0,         0,       1,       0,        -1 },
-	{ "st",       "floating-st",NULL,   0,         1,       1,       0,        -1 },
-	{ NULL,       NULL,       "Event Tester", 0,   0,       0,       1,        -1 }, /* xev */
-	{ "firefox",  NULL,       NULL,     1 << 1,    0,       0,       0,        -1 },
-	{ NULL,       NULL,       "Camera:",1 << 2,    0,       0,       1,        -1 },
-	{ "discord",  NULL,       NULL,     1 << 7,    0,       0,       0,        -1 },
-	{ "TelegramDesktop",NULL, NULL,     1 << 7,    0,       0,       0,        -1 },
-	{ "Steam",    NULL,       NULL,     1 << 8,    0,       0,       1,        -1 },
-	{ "StepMania",NULL,       NULL,     1 << 8,    0,       0,       1,        -1 },
+	/* class  |  instance  |  title  |  tagsmask | center | floats | isterm | noswall | mon */
+	{ "st",       NULL,       NULL,     0,         0,       0,       1,       0,        -1 },
+	{ "st",       "floating-st",NULL,   0,         1,       1,       1,       0,        -1 },
+	{ NULL,       NULL,       "Event Tester", 0,   0,       0,       0,       1,        -1 }, /* xev */
+	{ "firefox",  NULL,       NULL,     1 << 1,    0,       0,       0,       0,        -1 },
+	{ NULL,       NULL,       "Camera:",1 << 2,    0,       0,       0,       1,        -1 },
+	{ "discord",  NULL,       NULL,     1 << 7,    0,       0,       0,       0,        -1 },
+	{ "TelegramDesktop",NULL, NULL,     1 << 7,    0,       0,       0,       0,        -1 },
+	{ "Steam",    NULL,       NULL,     1 << 8,    0,       0,       0,       1,        -1 },
+	{ "StepMania",NULL,       NULL,     1 << 8,    0,       0,       0,       1,        -1 },
 };
 
 /* layout(s) */
