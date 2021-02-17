@@ -41,7 +41,7 @@ static const char *colors[][3] = {
 };
 
 /* tagging */
-static const char *tags[]    = { "   ", "   ", "   ", "   ", "5", "6", "7", "   ", "   " };
+static const char *tags[]    = { "   ", "   ", "   ", "4", "5", "6", "7", "   ", "   " };
 static const char *tagsalt[] = { "1", "2", "3", "4", "5", "6", "7", " 8 ", " 9 " };
 
 static const Rule rules[] = {
@@ -54,10 +54,11 @@ static const Rule rules[] = {
 	{ "st",       "floating-st",NULL,   0,         1,       1,       0,        -1 },
 	{ NULL,       NULL,       "Event Tester", 0,   0,       0,       1,        -1 }, /* xev */
 	{ "firefox",  NULL,       NULL,     1 << 1,    0,       0,       0,        -1 },
-	{ "xfreerdp", NULL,       NULL,     1 << 3,    0,       0,       0,        -1 },
+	{ NULL,       NULL,       "Camera:",1 << 2,    0,       0,       1,        -1 },
 	{ "discord",  NULL,       NULL,     1 << 7,    0,       0,       0,        -1 },
 	{ "TelegramDesktop",NULL, NULL,     1 << 7,    0,       0,       0,        -1 },
-	{ "DBeaver",  NULL,       NULL,     1 << 2,    0,       0,       1,        -1 },
+	{ "Steam",    NULL,       NULL,     1 << 8,    0,       0,       1,        -1 },
+	{ "StepMania",NULL,       NULL,     1 << 8,    0,       0,       1,        -1 },
 };
 
 /* layout(s) */
@@ -88,10 +89,10 @@ static const Layout layouts[] = {
 
 /* commands */
 enum { CmdDmenu, CmdSt, CmdFloatingSt, CmdPAMute, CmdPAVolUp, CmdPAVolUpU,
-	CmdPAVolDown, CmdPAVolDownU, CmdMpcToggle, CmdMpcPrev, CmdMpcNext,
+	CmdPAVolDown, CmdPAVolDownU, CmdMpcToggle, CmdMpcPrev, CmdMpcNext, CmdMpcRestart,
 	CmdMpcSeekBack, CmdMpcSeekForw, CmdMpcSeekBackL, CmdMpcSeekForwL,
 	CmdScrotScreen, CmdScrotRegion, CmdSlock, CmdFirefox, CmdZathura,
-	CmdLast };
+	CmdSearch, CmdSpeak, CmdLast };
 
 static const char *cmds[][CmdLast] = {
 	[CmdDmenu]        = { "dmenu_run", NULL },
@@ -105,6 +106,7 @@ static const char *cmds[][CmdLast] = {
 	[CmdMpcToggle]    = { "mpc" , "toggle", NULL},
 	[CmdMpcPrev]      = { "mpc" , "prev", NULL},
 	[CmdMpcNext]      = { "mpc" , "next", NULL},
+	[CmdMpcRestart]   = { "mpc" , "seek", "0",  NULL},
 	[CmdMpcSeekBack]  = { "mpc" , "seek", "-10",  NULL},
 	[CmdMpcSeekForw]  = { "mpc" , "seek", "+10", NULL},
 	[CmdMpcSeekBackL] = { "mpc" , "seek", "-1:00",  NULL},
@@ -114,6 +116,8 @@ static const char *cmds[][CmdLast] = {
 	[CmdSlock]        = {"slock", NULL},
 	[CmdFirefox]      = {"firefox", NULL},
 	[CmdZathura]      = {"tabbed", "-c", "zathura", "-e", NULL},
+	[CmdSearch]       = {"searchengines", NULL},
+	[CmdSpeak]        = {"gtspeak", NULL},
 };
 
 static char dmenuwin[20] = "";
@@ -161,6 +165,8 @@ static Key keys[] = {
 	{ MODKEY,                       XK_p,      spawn,          {.v = cmds[CmdDmenu] } },
 	{ MODKEY|ControlMask,           XK_u,      spawn,          {.v = cmds[CmdFirefox] } },
 	{ MODKEY|ControlMask,           XK_i,      spawn,          {.v = cmds[CmdZathura] } },
+	{ MODKEY,                       XK_s,      spawn,          {.v = cmds[CmdSearch] } },
+	{ MODKEY,                       XK_e,      spawn,          {.v = cmds[CmdSpeak] } },
 	{ MODKEY|ControlMask,           XK_g,      spawn,          SHCMD("grabc | tr -d '\\n' | xclip -selection clipboard") },
 	{ XK_NO_MOD,    XF86XK_AudioMute,          spawn,          {.v = cmds[CmdPAMute]} },
 	{ XK_NO_MOD,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDown]} },
@@ -169,12 +175,13 @@ static Key keys[] = {
 	{ ShiftMask,    XF86XK_AudioRaiseVolume,   spawn,          {.v = cmds[CmdPAVolUpU]} },
 	{ XK_NO_MOD,    XF86XK_AudioPlay,          spawn,          {.v = cmds[CmdMpcToggle]} },
 	{ XK_NO_MOD,    XF86XK_AudioPause,         spawn,          {.v = cmds[CmdMpcToggle]} },
-	{ XK_NO_MOD,    XF86XK_AudioPrev,          spawn,          {.v = cmds[CmdMpcPrev]} },
-	{ XK_NO_MOD,    XF86XK_AudioNext,          spawn,          {.v = cmds[CmdMpcNext]} },
+	{ XK_NO_MOD,    XF86XK_AudioPrev,          spawn,          SHCMD("mpc prev; pkill -RTMIN+1 dwmblocks") },
+	{ XK_NO_MOD,    XF86XK_AudioNext,          spawn,          SHCMD("mpc next; pkill -RTMIN+1 dwmblocks") },
 	{ ControlMask,  XF86XK_AudioPrev,          spawn,          {.v = cmds[CmdMpcSeekBack]} },
 	{ ControlMask,  XF86XK_AudioNext,          spawn,          {.v = cmds[CmdMpcSeekForw]} },
 	{ ShiftMask,    XF86XK_AudioPrev,          spawn,          {.v = cmds[CmdMpcSeekBackL]} },
 	{ ShiftMask,    XF86XK_AudioNext,          spawn,          {.v = cmds[CmdMpcSeekForwL]} },
+	{ ControlMask|ShiftMask, XF86XK_AudioPrev, spawn,          {.v = cmds[CmdMpcRestart]} },
 
 	/* modifier     key            function     argument                        event */
 	{ XK_NO_MOD,    XK_Print,      spawn,       {.v = cmds[CmdScrotScreen]},    KeyRelease },
