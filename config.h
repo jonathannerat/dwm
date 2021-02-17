@@ -59,6 +59,7 @@ static const Rule rules[] = {
 	{ "TelegramDesktop",NULL, NULL,     1 << 7,    0,       0,       0,       0,        -1 },
 	{ "Steam",    NULL,       NULL,     1 << 8,    0,       0,       0,       1,        -1 },
 	{ "StepMania",NULL,       NULL,     1 << 8,    0,       0,       0,       1,        -1 },
+	{ "retroarch",NULL,       NULL,     1 << 8,    0,       0,       0,       1,        -1 },
 };
 
 /* layout(s) */
@@ -175,8 +176,8 @@ static Key keys[] = {
 	{ ShiftMask,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDownU]} },
 	{ XK_NO_MOD,    XF86XK_AudioRaiseVolume,   spawn,          {.v = cmds[CmdPAVolUp]} },
 	{ ShiftMask,    XF86XK_AudioRaiseVolume,   spawn,          {.v = cmds[CmdPAVolUpU]} },
-	{ XK_NO_MOD,    XF86XK_AudioPlay,          spawn,          {.v = cmds[CmdMpcToggle]} },
-	{ XK_NO_MOD,    XF86XK_AudioPause,         spawn,          {.v = cmds[CmdMpcToggle]} },
+	{ XK_NO_MOD,    XF86XK_AudioPlay,          spawn,          SHCMD("mpc toggle; pkill -RTMIN+1 dwmblocks") },
+	{ XK_NO_MOD,    XF86XK_AudioPause,         spawn,          SHCMD("mpc toggle; pkill -RTMIN+1 dwmblocks") },
 	{ XK_NO_MOD,    XF86XK_AudioPrev,          spawn,          SHCMD("mpc prev; pkill -RTMIN+1 dwmblocks") },
 	{ XK_NO_MOD,    XF86XK_AudioNext,          spawn,          SHCMD("mpc next; pkill -RTMIN+1 dwmblocks") },
 	{ ControlMask,  XF86XK_AudioPrev,          spawn,          {.v = cmds[CmdMpcSeekBack]} },
