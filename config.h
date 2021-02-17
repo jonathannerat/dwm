@@ -92,7 +92,7 @@ enum { CmdDmenu, CmdSt, CmdFloatingSt, CmdPAMute, CmdPAVolUp, CmdPAVolUpU,
 	CmdPAVolDown, CmdPAVolDownU, CmdMpcToggle, CmdMpcPrev, CmdMpcNext, CmdMpcRestart,
 	CmdMpcSeekBack, CmdMpcSeekForw, CmdMpcSeekBackL, CmdMpcSeekForwL,
 	CmdScrotScreen, CmdScrotRegion, CmdSlock, CmdFirefox, CmdZathura,
-	CmdSearch, CmdSpeak, CmdLast };
+	CmdSearch, CmdSpeak, CmdQalc, CmdLast };
 
 static const char *cmds[][CmdLast] = {
 	[CmdDmenu]        = { "dmenu_run", NULL },
@@ -111,13 +111,14 @@ static const char *cmds[][CmdLast] = {
 	[CmdMpcSeekForw]  = { "mpc" , "seek", "+10", NULL},
 	[CmdMpcSeekBackL] = { "mpc" , "seek", "-1:00",  NULL},
 	[CmdMpcSeekForwL] = { "mpc" , "seek", "+1:00", NULL},
-	[CmdScrotScreen]  = {"scrot", "-e", "xclip -selection clipboard -target image/png '$f'; mv $f ~/pics/screenshots/",  NULL},
-	[CmdScrotRegion]  = {"scrot", "-s", "-e", "xclip -selection clipboard -target image/png '$f'; mv $f ~/pics/screenshots/", NULL},
-	[CmdSlock]        = {"slock", NULL},
-	[CmdFirefox]      = {"firefox", NULL},
-	[CmdZathura]      = {"tabbed", "-c", "zathura", "-e", NULL},
-	[CmdSearch]       = {"searchengines", NULL},
-	[CmdSpeak]        = {"gtspeak", NULL},
+	[CmdScrotScreen]  = { "scrot", "-e", "xclip -selection clipboard -target image/png '$f'; mv $f ~/pics/screenshots/",  NULL},
+	[CmdScrotRegion]  = { "scrot", "-s", "-e", "xclip -selection clipboard -target image/png '$f'; mv $f ~/pics/screenshots/", NULL},
+	[CmdSlock]        = { "slock", NULL },
+	[CmdFirefox]      = { "firefox", NULL },
+	[CmdZathura]      = { "tabbed", "-c", "zathura", "-e", NULL },
+	[CmdSearch]       = { "searchengines", NULL },
+	[CmdSpeak]        = { "gtspeak", NULL },
+	[CmdQalc]         = { "st", "-n", "floating-st", "-e", "qalc", NULL },
 };
 
 static char dmenuwin[20] = "";
@@ -168,6 +169,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_s,      spawn,          {.v = cmds[CmdSearch] } },
 	{ MODKEY,                       XK_e,      spawn,          {.v = cmds[CmdSpeak] } },
 	{ MODKEY|ControlMask,           XK_g,      spawn,          SHCMD("grabc | tr -d '\\n' | xclip -selection clipboard") },
+	{ MODKEY|ControlMask,           XK_k,      spawn,          {.v = cmds[CmdQalc]} },
 	{ XK_NO_MOD,    XF86XK_AudioMute,          spawn,          {.v = cmds[CmdPAMute]} },
 	{ XK_NO_MOD,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDown]} },
 	{ ShiftMask,    XF86XK_AudioLowerVolume,   spawn,          {.v = cmds[CmdPAVolDownU]} },
